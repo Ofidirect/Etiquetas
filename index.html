@@ -30,16 +30,16 @@
         margin: 20px auto;
       }
       .card-body {
-        padding: 10px;
+        padding: 8px;
       }
       .label-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 5px;
+        margin-bottom: 4px;
       }
       .code-text {
-        font-size: 32px;
+        font-size: 26px;
         font-weight: bold;
         line-height: 1;
         margin: 0;
@@ -49,11 +49,15 @@
         margin: 0;
       }
       svg#barcode {
-        width: 130px;
-        height: 45px;
+        width: 120px;
+        height: 35px;
+      }
+      svg#serialBarcode {
+        width: 140px;
+        height: 28px;
       }
       table {
-        font-size: 11px;
+        font-size: 10px;
         width: 100%;
         text-align: center;
         margin: auto;
@@ -63,14 +67,14 @@
         border-collapse: collapse;
       }
       th {
-        font-size: 10px;
+        font-size: 9px;
         background-color: #f8f9fa;
-        padding: 2px;
+        padding: 1px;
       }
       td {
-        font-size: 14px;
+        font-size: 11px;
         font-weight: bold;
-        padding: 3px;
+        padding: 2px;
       }
 
       @media print {
@@ -116,7 +120,7 @@
           </div>
         </header>
 
-        <!-- Formularios de entrada -->
+        <!-- Campos de entrada -->
         <div class="row g-2">
           <div class="col-6">
             <input
@@ -132,46 +136,56 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Fecha de ingreso"
-              aria-label="admissionDate"
+              placeholder="Número de serie"
+              aria-label="serialNumber"
               oninput="refresData(this)"
               tabindex="2"
             />
           </div>
-          <div class="col-4">
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Fecha de ingreso"
+              aria-label="admissionDate"
+              oninput="refresData(this)"
+              tabindex="3"
+            />
+          </div>
+          <div class="col-6">
             <input
               type="text"
               class="form-control"
               placeholder="Fecha de Vencimiento"
               aria-label="dueDate"
               oninput="refresData(this)"
-              tabindex="3"
+              tabindex="4"
             />
           </div>
-          <div class="col-4">
+          <div class="col-6">
             <input
               type="text"
               class="form-control"
               placeholder="Cantidad"
               aria-label="qty"
               oninput="refresData(this)"
-              tabindex="4"
+              tabindex="5"
             />
           </div>
-          <div class="col-4">
+          <div class="col-6">
             <input
               type="text"
               class="form-control"
               placeholder="Posición"
               aria-label="position"
               oninput="refresData(this)"
-              tabindex="5"
+              tabindex="6"
             />
           </div>
         </div>
 
         <div class="mt-3">
-          <button onclick="imprimir()" class="btn btn-primary px-4" tabindex="6">
+          <button onclick="imprimir()" class="btn btn-primary px-4" tabindex="7">
             Imprimir
           </button>
           <div class="mt-1">
@@ -211,8 +225,19 @@
                   <td id="qty">00</td>
                   <td id="position">A1 01</td>
                 </tr>
+                <tr>
+                  <th colspan="2">Número de Serie</th>
+                </tr>
+                <tr>
+                  <td colspan="2" id="serialNumber">SN-0000</td>
+                </tr>
               </tbody>
             </table>
+
+            <!-- Código de barras dedicado para Número de Serie -->
+            <div class="text-center mt-1">
+              <svg id="serialBarcode"></svg>
+            </div>
           </div>
         </div>
       </div>
@@ -226,29 +251,45 @@
         window.print();
       }
 
-      // Cargar fecha actual por defecto si no hay nada ingresado
       const fechaActual = new Date();
       const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
       document.getElementById("admissionDate").innerText = fechaFormateada;
 
-      // Inicializar el Código de Barras
+      // Generador código de artículo
       function generarCodigoBarras(valor) {
         try {
           JsBarcode("#barcode", valor || "000-000", {
             format: "CODE128",
-            width: 1.5,
-            height: 40,
+            width: 1.3,
+            height: 35,
             displayValue: true,
-            fontSize: 9,
+            fontSize: 8,
             margin: 0
           });
         } catch (e) {
           console.log("Código de barras no válido");
         }
       }
-      generarCodigoBarras("000-000");
 
-      // Actualizar vista previa en tiempo real
+      // Generador código de serie
+      function generarCodigoSerie(valor) {
+        try {
+          JsBarcode("#serialBarcode", valor || "SN-0000", {
+            format: "CODE128",
+            width: 1.2,
+            height: 28,
+            displayValue: true,
+            fontSize: 8,
+            margin: 0
+          });
+        } catch (e) {
+          console.log("Código de serie no válido");
+        }
+      }
+
+      generarCodigoBarras("000-000");
+      generarCodigoSerie("SN-0000");
+
       function refresData(e) {
         const campoDestino = e.getAttribute("aria-label");
         const valor = e.value.toUpperCase();
@@ -260,11 +301,16 @@
         if (campoDestino === "code") {
           generarCodigoBarras(valor !== "" ? valor : "000-000");
         }
+
+        if (campoDestino === "serialNumber") {
+          generarCodigoSerie(valor !== "" ? valor : "SN-0000");
+        }
       }
 
       function getDefaultValue(id) {
         const defaults = {
           code: "000-000",
+          serialNumber: "SN-0000",
           admissionDate: fechaFormateada,
           dueDate: "01/12/2099",
           qty: "00",
@@ -273,7 +319,6 @@
         return defaults[id] || "";
       }
 
-      // Atajo Ctrl + Enter
       document.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.key === "Enter") {
           imprimir();
