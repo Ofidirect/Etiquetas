@@ -30,31 +30,34 @@
         margin: 15px auto;
       }
       .card-body {
-        padding: 4px 6px; /* Espaciado compacto para evitar salto de página */
+        padding: 4px 6px;
       }
+      /* Centrado de la cabecera superior */
       .label-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
+        gap: 12px; /* Mantiene ambos elementos juntos en el centro */
         margin-bottom: 2px;
       }
       .code-text {
-        font-size: 20px; /* Tamaño reducido del código principal */
+        font-size: 20px;
         font-weight: bold;
         line-height: 1;
         margin: 0;
       }
       .barCode {
-        text-align: right;
+        text-align: center;
         margin: 0;
       }
       svg#barcode {
         width: 110px;
-        height: 25px; /* Altura compacta del primer código */
+        height: 25px;
       }
+      /* Tamaño ampliado del código de serie inferior */
       svg#serialBarcode {
-        width: 130px;
-        height: 22px; /* Altura compacta del código de serie */
+        width: 180px;
+        height: 34px;
       }
       table {
         font-size: 9px;
@@ -275,10 +278,10 @@
         try {
           JsBarcode("#serialBarcode", valor || "SN-0000", {
             format: "CODE128",
-            width: 1.1,
-            height: 22,
+            width: 1.3,
+            height: 32,
             displayValue: true,
-            fontSize: 8,
+            fontSize: 9,
             margin: 0
           });
         } catch (e) {
