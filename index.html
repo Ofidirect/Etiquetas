@@ -26,20 +26,20 @@
         background-color: rgb(235, 235, 235);
       }
       .desing {
-        width: 320px;
-        margin: 20px auto;
+        width: 300px;
+        margin: 15px auto;
       }
       .card-body {
-        padding: 8px;
+        padding: 4px 6px; /* Espaciado compacto para evitar salto de página */
       }
       .label-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
       }
       .code-text {
-        font-size: 26px;
+        font-size: 20px; /* Tamaño reducido del código principal */
         font-weight: bold;
         line-height: 1;
         margin: 0;
@@ -49,15 +49,15 @@
         margin: 0;
       }
       svg#barcode {
-        width: 120px;
-        height: 35px;
+        width: 110px;
+        height: 25px; /* Altura compacta del primer código */
       }
       svg#serialBarcode {
-        width: 140px;
-        height: 28px;
+        width: 130px;
+        height: 22px; /* Altura compacta del código de serie */
       }
       table {
-        font-size: 10px;
+        font-size: 9px;
         width: 100%;
         text-align: center;
         margin: auto;
@@ -67,24 +67,24 @@
         border-collapse: collapse;
       }
       th {
-        font-size: 9px;
+        font-size: 8px;
         background-color: #f8f9fa;
         padding: 1px;
       }
       td {
-        font-size: 11px;
+        font-size: 10px;
         font-weight: bold;
-        padding: 2px;
+        padding: 1px;
       }
 
       @media print {
         @page {
           size: landscape;
-          width: 80mm;
-          height: 50mm;
           margin: 0;
         }
-        body {
+        html, body {
+          height: 100%;
+          overflow: hidden;
           background: white;
         }
         .form {
@@ -93,6 +93,8 @@
         .desing {
           margin: 0;
           width: 100%;
+          page-break-inside: avoid;
+          break-inside: avoid;
         }
         .card {
           border: none !important;
@@ -234,7 +236,6 @@
               </tbody>
             </table>
 
-            <!-- Código de barras dedicado para Número de Serie -->
             <div class="text-center mt-1">
               <svg id="serialBarcode"></svg>
             </div>
@@ -255,13 +256,12 @@
       const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
       document.getElementById("admissionDate").innerText = fechaFormateada;
 
-      // Generador código de artículo
       function generarCodigoBarras(valor) {
         try {
           JsBarcode("#barcode", valor || "000-000", {
             format: "CODE128",
-            width: 1.3,
-            height: 35,
+            width: 1.1,
+            height: 25,
             displayValue: true,
             fontSize: 8,
             margin: 0
@@ -271,13 +271,12 @@
         }
       }
 
-      // Generador código de serie
       function generarCodigoSerie(valor) {
         try {
           JsBarcode("#serialBarcode", valor || "SN-0000", {
             format: "CODE128",
-            width: 1.2,
-            height: 28,
+            width: 1.1,
+            height: 22,
             displayValue: true,
             fontSize: 8,
             margin: 0
