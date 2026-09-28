@@ -40,11 +40,11 @@
         border-radius: 0;
       }
       .card-body {
-        padding: 2mm 5mm 3mm 5mm; /* Ajustado: menos margen arriba para aprovechar todo el espacio */
+        padding: 1mm 4mm 1mm 4mm; /* Se redujo el padding superior/inferior para evitar cortes */
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
       }
 
       /* Oculta texto interno de códigos de barras para lector láser */
@@ -52,22 +52,22 @@
         display: none !important;
       }
 
-      /* SECCIÓN SUPERIOR (MÁS ALTA Y GRANDE) */
+      /* SECCIÓN SUPERIOR (PEGADA MÁS ARRIBA) */
       .top-section {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: 2mm;
+        padding-bottom: 1mm;
         border-bottom: 1.5px solid #000;
       }
       .main-code {
-        font-size: 25px; /* Aumentado */
+        font-size: 24px;
         font-weight: 800;
         line-height: 1;
       }
       svg#barcode {
         width: 135px;
-        height: 42px; /* Aumentado */
+        height: 38px;
       }
 
       /* SECCIÓN INFERIOR */
@@ -75,55 +75,57 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding-top: 2mm;
+        padding-top: 1mm;
         flex-grow: 1;
       }
       
-      /* Columna izquierda: Datos */
+      /* Columna izquierda: Datos compactados verticalmente */
       .left-col {
-        width: 46%;
+        width: 48%;
         display: flex;
         flex-direction: column;
-        gap: 1.2mm;
+        gap: 0.5mm; /* Espacio interlineal reducido */
       }
       .data-group {
         display: flex;
         flex-direction: column;
-        line-height: 1;
+        line-height: 0.95;
       }
       .data-label {
-        font-size: 9px; /* Aumentado */
+        font-size: 8.5px;
         font-weight: 700;
         color: #222;
         text-transform: uppercase;
       }
       .data-value {
-        font-size: 12px; /* Aumentado */
+        font-size: 11.5px;
         font-weight: 800;
       }
 
       /* Columna derecha: Serie */
       .right-col {
-        width: 52%;
+        width: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
       }
       .serial-title {
-        font-size: 11px; /* Aumentado */
+        font-size: 10.5px;
         font-weight: 800;
         text-transform: uppercase;
-        margin-bottom: 1px;
+        margin-bottom: 0px;
+        line-height: 1;
       }
       .serial-value {
-        font-size: 13px; /* Aumentado */
+        font-size: 12.5px;
         font-weight: 800;
-        margin-bottom: 2px;
+        margin-bottom: 1px;
+        line-height: 1;
       }
       svg#serialBarcode {
-        width: 145px;
-        height: 44px;
+        width: 140px;
+        height: 36px; /* Altura ajustada para liberar espacio vertical */
       }
 
       /* CONFIGURACIÓN DE IMPRESIÓN (8cm x 5cm) */
@@ -315,7 +317,7 @@
           JsBarcode("#barcode", valor || "252-654", {
             format: "CODE128",
             width: 1.35,
-            height: 42,
+            height: 38,
             displayValue: false,
             margin: 0
           });
@@ -329,7 +331,7 @@
           JsBarcode("#serialBarcode", valor || "456789123", {
             format: "CODE128",
             width: 1.25,
-            height: 44,
+            height: 36,
             displayValue: false,
             margin: 0
           });
