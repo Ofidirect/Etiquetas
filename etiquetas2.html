@@ -1,1 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link rel="shortcut icon" href="logo_1.ico" type="image/x-icon" />
+
+    <title>Impresión Etiquetas Zebra 2.0</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .form {
+        margin: auto;
+        padding: 20px;
+        width: 700px;
+        background-color: rgb(235, 235, 235);
+      }
+      .desing {
+        width: 320px;
+        margin: 15px auto;
+      }
+      .card-body {
+        padding: 6px 8px;
+        background-color: #fff;
+      }
+
+      /* Oculta el texto dentro del SVG para lectura láser limpia */
+      svg text {
+        display: none !important;
+      }
+
+      /* SECCIÓN SUPERIOR */
+      .top-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 4px;
+        border-bottom: 1.5px solid #000; /* Única línea horizontal divisoria */
+      }
+      .main-code {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+      svg#barcode {
+        width: 145px;
+        height: 38px;
+      }
+
+      /* SECCIÓN INFERIOR */
+      .bottom-section {
+        display: flex;
+        padding-top: 6px;
+      }
+      
+      /* Columna izquierda: Datos */
+      .left-col {
+        width: 42%;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .data-group {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+      }
+      .data-label {
+        font-size: 9px;
+        font-weight: 700;
+        color: #333;
+        text-transform: uppercase;
+      }
+      .data-value {
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      /* Columna derecha: Serie y su código de barras */
+      .right-col {
+        width: 58%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 4px;
+      }
+      .serial-title {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 1px;
+      }
+      .serial-value {
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 2px;
+      }
+      svg#serialBarcode {
+        width: 165px;
+        height: 45px;
+      }
+
+      @media print {
+        @page {
+          size: landscape;
+          margin: 0;
+        }
+        html, body {
+          height: 100%;
+          overflow: hidden;
+          background: white;
+        }
+        .form {
+          display: none !important;
+        }
+        .desing {
+          margin: 0;
+          width: 100%;
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+        .card {
+          border: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="form">
+        <!-- Botones superiores -->
+        <div class="d-flex justify-content-center gap-3 mb-3">
+          <a class="btn btn-secondary" style="width: 150px" href="index.html">Versión 1.0</a>
+          <a class="btn btn-primary" style="width: 150px" href="etiquetas2.html">Versión 2.0</a>
+        </div>
+
+        <!-- Encabezado -->
+        <header class="row align-items-center mb-3">
+          <div class="col-3 text-center">
+            <img src="logo_1.png" alt="ofi direct" width="100" onerror="this.style.display='none'" />
+          </div>
+          <div class="col-9 text-start">
+            <h1 class="h2 m-0 fw-bold">Impresión de Etiquetas Zebra 2.0</h1>
+          </div>
+        </header>
+
+        <!-- Campos de entrada -->
+        <div class="row g-2">
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ingrese el código del artículo."
+              aria-label="code"
+              oninput="refresData(this)"
+              tabindex="1"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Número de serie"
+              aria-label="serialNumber"
+              oninput="refresData(this)"
+              tabindex="2"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Fecha de ingreso"
+              aria-label="admissionDate"
+              oninput="refresData(this)"
+              tabindex="3"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Fecha de Vencimiento"
+              aria-label="dueDate"
+              oninput="refresData(this)"
+              tabindex="4"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Cantidad"
+              aria-label="qty"
+              oninput="refresData(this)"
+              tabindex="5"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Posición"
+              aria-label="position"
+              oninput="refresData(this)"
+              tabindex="6"
+            />
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <button onclick="imprimir()" class="btn btn-primary px-4" tabindex="7">
+            Imprimir
+          </button>
+          <div class="mt-1">
+            <small class="text-muted">Para imprimir puedes seleccionar <code class="text-danger">Ctrl+Enter</code></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Previsualización de la Etiqueta Versión 2.0 -->
+      <div class="desing">
+        <div class="card shadow-sm" id="tema1">
+          <div class="card-body">
+            
+            <!-- PARTE SUPERIOR -->
+            <div class="top-section">
+              <div class="main-code" id="code">252-654</div>
+              <div>
+                <svg id="barcode"></svg>
+              </div>
+            </div>
+
+            <!-- PARTE INFERIOR -->
+            <div class="bottom-section">
+              <!-- Izquierda: Datos -->
+              <div class="left-col">
+                <div class="data-group">
+                  <span class="data-label">Ingreso</span>
+                  <span class="data-value" id="admissionDate">28/9/2026</span>
+                </div>
+                <div class="data-group">
+                  <span class="data-label">Cantidad</span>
+                  <span class="data-value" id="qty">10</span>
+                </div>
+                <div class="data-group">
+                  <span class="data-label">Posición</span>
+                  <span class="data-value" id="position">A-01</span>
+                </div>
+              </div>
+
+              <!-- Derecha: Número de Serie + Barcode -->
+              <div class="right-col">
+                <div class="serial-title">Número de Serie</div>
+                <div class="serial-value" id="serialNumber">456789123</div>
+                <svg id="serialBarcode"></svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Librería para el Código de Barras -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <script>
+      function imprimir() {
+        window.print();
+      }
+
+      const fechaActual = new Date();
+      const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
+      document.getElementById("admissionDate").innerText = fechaFormateada;
+
+      function generarCodigoBarras(valor) {
+        try {
+          JsBarcode("#barcode", valor || "252-654", {
+            format: "CODE128",
+            width: 1.4,
+            height: 38,
+            displayValue: false,
+            margin: 0
+          });
+        } catch (e) {
+          console.log("Código de barras no válido");
+        }
+      }
+
+      function generarCodigoSerie(valor) {
+        try {
+          JsBarcode("#serialBarcode", valor || "456789123", {
+            format: "CODE128",
+            width: 1.3,
+            height: 45,
+            displayValue: false,
+            margin: 0
+          });
+        } catch (e) {
+          console.log("Código de serie no válido");
+        }
+      }
+
+      generarCodigoBarras("252-654");
+      generarCodigoSerie("456789123");
+
+      function refresData(e) {
+        const campoDestino = e.getAttribute("aria-label");
+        const valor = e.value.toUpperCase();
+
+        if (campoDestino && document.getElementById(campoDestino)) {
+          document.getElementById(campoDestino).innerText = valor !== "" ? valor : getDefaultValue(campoDestino);
+        }
+
+        if (campoDestino === "code") {
+          generarCodigoBarras(valor !== "" ? valor : "252-654");
+        }
+
+        if (campoDestino === "serialNumber") {
+          generarCodigoSerie(valor !== "" ? valor : "456789123");
+        }
+      }
+
+      function getDefaultValue(id) {
+        const defaults = {
+          code: "252-654",
+          serialNumber: "456789123",
+          admissionDate: fechaFormateada,
+          dueDate: "01/12/2099",
+          qty: "10",
+          position: "A-01"
+        };
+        return defaults[id] || "";
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key === "Enter") {
+          imprimir();
+        }
+      });
+    </script>
+  </body>
+</html>
