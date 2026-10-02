@@ -40,7 +40,7 @@
         border-radius: 0;
       }
       .card-body {
-        padding: 0mm 4mm 0mm 4mm;
+        padding: 0.5mm 3mm 0.5mm 3mm;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -52,41 +52,41 @@
         display: none !important;
       }
 
-      /* SECCIÓN SUPERIOR (SUBIDA LIGERAMENTE) */
+      /* SECCIÓN SUPERIOR (MÁS GRANDE Y PEGADA ARRIBA) */
       .top-section {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: 0.8mm; /* Subido ligeramente */
+        padding-top: 0.5mm;
         padding-bottom: 0;
         border-bottom: none;
       }
       .main-code {
-        font-size: 24px;
-        font-weight: 800;
+        font-size: 32px; /* Aumentado considerablemente */
+        font-weight: 900;
         line-height: 1;
       }
       svg#barcode {
-        width: 135px;
-        height: 38px;
+        width: 145px;
+        height: 48px; /* Código de barras superior más alto */
       }
 
       /* SECCIÓN INFERIOR */
       .bottom-section {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: flex-end;
         padding-top: 1mm;
-        padding-bottom: 1.5mm;
+        padding-bottom: 1mm;
         flex-grow: 1;
       }
       
-      /* Columna izquierda: Datos con mayor tamaño de texto */
+      /* Columna izquierda: Datos con fuentes aumentadas */
       .left-col {
         width: 48%;
         display: flex;
         flex-direction: column;
-        gap: 0.8mm;
+        gap: 1.2mm;
       }
       .data-group {
         display: flex;
@@ -94,41 +94,41 @@
         line-height: 0.95;
       }
       .data-label {
-        font-size: 9.5px; /* Tamaño aumentado */
-        font-weight: 700;
-        color: #222;
+        font-size: 11px; /* Aumentado */
+        font-weight: 800;
+        color: #111;
         text-transform: uppercase;
       }
       .data-value {
-        font-size: 13px; /* Tamaño aumentado */
-        font-weight: 800;
+        font-size: 16px; /* Aumentado */
+        font-weight: 900;
       }
 
-      /* Columna derecha: Serie desplazado hacia abajo */
+      /* Columna derecha: Serie agrandado y posicionado abajo */
       .right-col {
         width: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        padding-top: 3.5mm; /* Bajado más para posicionarlo abajo */
+        justify-content: flex-end;
+        padding-bottom: 0.5mm;
       }
       .serial-title {
-        font-size: 10.5px;
+        font-size: 12.5px; /* Aumentado */
         font-weight: 800;
         text-transform: uppercase;
-        margin-bottom: 0px;
+        margin-bottom: 1px;
         line-height: 1;
       }
       .serial-value {
-        font-size: 12.5px;
-        font-weight: 800;
+        font-size: 16px; /* Aumentado */
+        font-weight: 900;
         margin-bottom: 2px;
         line-height: 1;
       }
       svg#serialBarcode {
-        width: 140px;
-        height: 36px;
+        width: 155px;
+        height: 44px; /* Código de barras de serie más alto y ancho */
       }
 
       /* CONFIGURACIÓN DE IMPRESIÓN (8cm x 5cm) */
@@ -319,8 +319,8 @@
         try {
           JsBarcode("#barcode", valor || "252-654", {
             format: "CODE128",
-            width: 1.35,
-            height: 38,
+            width: 1.45,
+            height: 48,
             displayValue: false,
             margin: 0
           });
@@ -333,8 +333,8 @@
         try {
           JsBarcode("#serialBarcode", valor || "456789123", {
             format: "CODE128",
-            width: 1.25,
-            height: 36,
+            width: 1.35,
+            height: 44,
             displayValue: false,
             margin: 0
           });
